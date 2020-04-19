@@ -53,8 +53,8 @@ type Device struct {
 type Group struct {
 	General
 
-	Power   int `json:"5850"`
-	Num5851 int `json:"5851"`
+	Power int `json:"5850"`
+	Mood  int `json:"9039"`
 
 	Content struct {
 		DeviceList struct {
@@ -62,7 +62,7 @@ type Group struct {
 		} `json:"15002"`
 	} `json:"9018"`
 
-	Num9039 int `json:"9039"`
+	Num5851 int `json:"5851"`
 	Num9108 int `json:"9108"`
 }
 
@@ -82,16 +82,19 @@ type RemoteControl struct {
 	} `json:"15009"`
 }
 
+// PowerControl defines (with JSON tags) a IKEA power control.
+type PowerControl struct {
+	ID          int `json:"9003"`
+	DeviceState int `json:"5850"`
+	Num5851     int `json:"5851"`
+}
+
 // ControlOutlet defines (with JSON tags) a IKEA control outlet.
 type ControlOutlet struct {
 	General
 
-	Metadata     Metadata `json:"3"`
-	PowerControl []struct {
-		Num5850 int `json:"5850"`
-		Num5851 int `json:"5851"`
-		ID      int `json:"9003"`
-	} `json:"3312"`
+	Metadata     Metadata       `json:"3"`
+	PowerControl []PowerControl `json:"3312"`
 
 	ApplicationType int `json:"5750"`
 	ReachableState  int `json:"9019"`
