@@ -169,6 +169,7 @@ func (tc *Client) GetDevice(id string) (model.Device, error) {
 	return *device, nil
 }
 
+// List the ids of whatever is identified by the passed ID string.
 func (tc *Client) List(id string) ([]int, error) {
 	if !strings.HasPrefix(id, "/") {
 		id = "/" + id
