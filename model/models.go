@@ -46,7 +46,7 @@ type Device struct {
 	ApplicationType int `json:"5750"`
 	ReachableState  int `json:"9019"`
 	LastSeen        int `json:"9020"`
-	Num9054         int `json:"9054"`
+	OTAUpdateState  int `json:"9054"`
 }
 
 // Group defines (with JSON tags) a IKEA trådfri Group.
@@ -75,8 +75,9 @@ type RemoteControl struct {
 	ApplicationType int `json:"5750"`
 	ReachableState  int `json:"9019"`
 	LastSeen        int `json:"9020"`
-	Num9054         int `json:"9054"`
-	Num15009        []struct {
+	OTAUpdateState  int `json:"9054"`
+
+	Num15009 []struct {
 		ID int `json:"9003"`
 	} `json:"15009"`
 }
@@ -92,11 +93,12 @@ type ControlOutlet struct {
 		ID      int `json:"9003"`
 	} `json:"3312"`
 
-	ApplicationType int    `json:"5750"`
-	ReachableState  int    `json:"9019"`
-	LastSeen        int    `json:"9020"`
-	Num9054         int    `json:"9054"`
-	Num9084         string `json:"9084"`
+	ApplicationType int `json:"5750"`
+	ReachableState  int `json:"9019"`
+	LastSeen        int `json:"9020"`
+	OTAUpdateState  int `json:"9054"`
+
+	Num9084 string `json:"9084"`
 }
 
 // DeviceMetadata defines (with JSON tags) common device metadata. Typically embedded in other structs.
