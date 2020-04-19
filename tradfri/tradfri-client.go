@@ -3,12 +3,13 @@ package tradfri
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/dustin/go-coap"
 	"github.com/eriklupander/tradfri-go/dtlscoap"
 	"github.com/eriklupander/tradfri-go/model"
 	"github.com/sirupsen/logrus"
-	"strconv"
-	"strings"
 )
 
 // Client provides a declarative API for sending CoAP messages to the gateway over DTLS.
@@ -108,16 +109,9 @@ func (tc *Client) PutDevicePositioning(deviceId string, positioning float32) (mo
 func (tc *Client) ListGroups() ([]model.Group, error) {
 	groups := make([]model.Group, 0)
 
-	resp, err := tc.Call(tc.dtlsclient.BuildGETMessage("/15004"))
+	groupIds, err := tc.List("15004")
 	if err != nil {
 		logrus.WithError(err).Error("Unable to call Trådfri Gateway")
-		return groups, err
-	}
-
-	groupIds := make([]int, 0)
-	err = json.Unmarshal(resp.Payload, &groupIds)
-	if err != nil {
-		logrus.Info("Unable to parse groups list into JSON: " + err.Error())
 		return groups, err
 	}
 
@@ -126,6 +120,23 @@ func (tc *Client) ListGroups() ([]model.Group, error) {
 		groups = append(groups, group)
 	}
 	return groups, nil
+}
+
+// ListDevices lists all devices
+func (tc *Client) ListDevices() ([]model.Device, error) {
+	devices := make([]model.Device, 0)
+
+	deviceIds, err := tc.List("15001")
+	if err != nil {
+		logrus.WithError(err).Error("Unable to call Trådfri Gateway")
+		return devices, err
+	}
+
+	for _, id := range deviceIds {
+		group, _ := tc.GetDevice(strconv.Itoa(id))
+		devices = append(devices, group)
+	}
+	return devices, nil
 }
 
 // GetGroup gets the JSON representation of the specified group.
@@ -156,6 +167,26 @@ func (tc *Client) GetDevice(id string) (model.Device, error) {
 		return *device, err
 	}
 	return *device, nil
+}
+
+func (tc *Client) List(id string) ([]int, error) {
+	if !strings.HasPrefix(id, "/") {
+		id = "/" + id
+	}
+
+	resp, err := tc.Call(tc.dtlsclient.BuildGETMessage(id))
+	if err != nil {
+		logrus.WithError(err).Error("Unable to call Trådfri Gateway")
+		return nil, err
+	}
+
+	ids := make([]int, 0)
+	if err := json.Unmarshal(resp.Payload, &ids); err != nil {
+		logrus.Info("Unable to parse list into JSON: " + err.Error())
+		return nil, err
+	}
+
+	return ids, nil
 }
 
 // Get gets whatever is identified by the passed ID string.
