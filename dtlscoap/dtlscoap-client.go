@@ -1,9 +1,10 @@
 package dtlscoap
 
 import (
-	"github.com/sirupsen/logrus"
 	"os"
 	"time"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/dustin/go-coap"
 	"github.com/eriklupander/dtls"
@@ -75,12 +76,12 @@ func (dc *DtlsClient) Call(req coap.Message) (coap.Message, error) {
 		return coap.Message{}, err
 	}
 
-	logrus.Info("Response: ")
-	logrus.Infof("MessageID: %v\n", msg.MessageID)
-	logrus.Infof("Type: %v\n", msg.Type)
-	logrus.Infof("Code: %v\n", msg.Code)
-	logrus.Infof("Token: %v\n", msg.Token)
-	logrus.Infof("Payload: %v\n", string(msg.Payload))
+	logrus.Debug("Response: ")
+	logrus.Debugf("MessageID: %v\n", msg.MessageID)
+	logrus.Debugf("Type: %v\n", msg.Type)
+	logrus.Debugf("Code: %v\n", msg.Code)
+	logrus.Debugf("Token: %v\n", msg.Token)
+	logrus.Debugf("Payload: %v\n", string(msg.Payload))
 
 	return msg, nil
 }
